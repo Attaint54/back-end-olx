@@ -12,12 +12,16 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL;
 
+// 🔥 HOME → redirect to products
+app.get("/", (req, res) => {
+  res.redirect("/products");
+});
+
 // 🔥 GET ALL PRODUCTS
-app.get("/", async (req, res) => {
+app.get("/products", async (req, res) => {
   try {
     const response = await axios.get(BASE_URL);
 
-    // only products array
     res.json(response.data.products);
 
   } catch (error) {
