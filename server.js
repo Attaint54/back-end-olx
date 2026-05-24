@@ -34,6 +34,12 @@ app.get("/product/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// ✅ Export for Vercel (serverless)
+module.exports = app;
+
+// ✅ Local development server (ignored on Vercel)
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
