@@ -1,8 +1,8 @@
 require("dotenv").config();
 
 const express = require("express");
-const axios = require("axios");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 
@@ -12,33 +12,46 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL;
 
-// 🔥 ROOT ROUTE = PRODUCTS
+// 🔥 GET ALL PRODUCTS
 app.get("/", async (req, res) => {
   try {
     const response = await axios.get(BASE_URL);
 
-    // send ONLY products array
+    // only products array
     res.json(response.data.products);
+
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products" });
+    console.log("ERROR:", error.message);
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
-// 🔥 SINGLE PRODUCT (optional but useful)
+// 🔥 GET SINGLE PRODUCT
 app.get("/product/:id", async (req, res) => {
   try {
-    const response = await axios.get(`${BASE_URL}/${req.params.id}`);
+    const response = await axios.get(
+      `${BASE_URL}/${req.params.id}`
+    );
+
     res.json(response.data);
+
   } catch (error) {
-    res.status(500).json({ error: "Product not found" });
+    console.log("ERROR:", error.message);
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
-// ✅ Export for Vercel (serverless)
+// ✅ Export for Vercel
 module.exports = app;
 
-// ✅ Local development server (ignored on Vercel)
-if (process.env.VERCEL !== '1') {
+// ✅ Local server
+if (process.env.VERCEL !== "1") {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
