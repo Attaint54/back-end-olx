@@ -46,14 +46,15 @@ const authenticate = (req, res, next) => {
     const decoded = jwt.verify(header.split(" ")[1], JWT_SECRET);
     req.user = decoded;
     next();
-  } catch {
-    res.status(401).json({ error: "Invalid or expired token." });
+  } catch (error) {
+    console.error("Auth error:", error.message);
+    return res.status(401).json({ error: "Invalid or expired token." });
   }
 };
 
 app.post("/register", upload.single("image"), async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { name, username, email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required." });
     }
@@ -62,9 +63,10 @@ app.post("/register", upload.single("image"), async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const profilePicture = req.file ? req.file.path : null;
-    const user = { id: users.length + 1, email, password: hashedPassword, profilePicture };
+    const user = { id: users.length + 1, name, username, email, password: hashedPassword, profilePicture };
     users.push(user);
-    res.status(201).json({ message: "User registered successfully.", profilePicture });
+    const token = jwt.sign({ id: user.id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture }, JWT_SECRET, { expiresIn: "7d" });
+    res.status(201).json({ message: "User registered successfully.", user: { id: user.id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture }, token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -72,20 +74,20 @@ app.post("/register", upload.single("image"), async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required." });
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: "Username and password are required." });
     }
-    const user = users.find((u) => u.email === email);
+    const user = users.find((u) => u.username === username);
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password." });
+      return res.status(401).json({ error: "Invalid username or password." });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid email or password." });
+      return res.status(401).json({ error: "Invalid username or password." });
     }
-    const token = jwt.sign({ id: user.id, email: user.email, profilePicture: user.profilePicture }, JWT_SECRET, { expiresIn: "7d" });
-    res.json({ token, profilePicture: user.profilePicture });
+    const token = jwt.sign({ id: user.id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture }, JWT_SECRET, { expiresIn: "7d" });
+    res.json({ token, user: { id: user.id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -108,7 +110,7 @@ app.get("/products", async (req, res) => {
     res.json(response.data.products);
 
   } catch (error) {
-    console.log("ERROR:", error.message);
+    console.error("ERROR:", error.message);
 
     res.status(500).json({
       error: error.message
@@ -126,7 +128,7 @@ app.get("/product/:id", async (req, res) => {
     res.json(response.data);
 
   } catch (error) {
-    console.log("ERROR:", error.message);
+    console.error("ERROR:", error.message);
 
     res.status(500).json({
       error: error.message
