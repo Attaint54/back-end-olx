@@ -102,34 +102,50 @@ app.get("/", (req, res) => {
   res.json({ message: "API is running" });
 });
 
-// 🔥 GET ALL PRODUCTS
-app.get("/products", async (req, res) => {
+// 🔥 PROXY all /products/* requests to DummyJSON
+app.all("/products/{*path}", async (req, res) => {
   try {
-    const response = await axios.get(BASE_URL);
-
-    res.json(response.data.products);
-
+    const targetUrl = `https://dummyjson.com${req.originalUrl}`;
+    const response = await axios({
+      method: req.method,
+      url: targetUrl,
+      data: req.method !== "GET" ? req.body : undefined,
+    });
+    res.json(response.data);
   } catch (error) {
-    console.error("ERROR:", error.message);
-
-    res.status(500).json({
+    console.error("Proxy ERROR:", error.message);
+    res.status(error.response?.status || 500).json({
       error: error.message
     });
   }
 });
 
-// 🔥 GET SINGLE PRODUCT
+app.get("/products", async (req, res) => {
+  try {
+    const targetUrl = `https://dummyjson.com${req.originalUrl}`;
+    const response = await axios({
+      method: req.method,
+      url: targetUrl,
+      data: req.method !== "GET" ? req.body : undefined,
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error("Proxy ERROR:", error.message);
+    res.status(error.response?.status || 500).json({
+      error: error.message
+    });
+  }
+});
+
+// 🔥 GET SINGLE PRODUCT (alternative singular route)
 app.get("/product/:id", async (req, res) => {
   try {
     const response = await axios.get(
       `${BASE_URL}/${req.params.id}`
     );
-
     res.json(response.data);
-
   } catch (error) {
     console.error("ERROR:", error.message);
-
     res.status(500).json({
       error: error.message
     });
