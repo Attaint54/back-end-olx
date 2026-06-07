@@ -1,113 +1,79 @@
-You are a senior MERN stack engineer.
 
-I have an OLX-style project with separate repositories:
+Registration Failed: cloud_name is disabled
+yeh likha aa raha hai jb bhi register kr raha houn solve kr
 
-Backend Repository:
+
+Analyze this repository completely:
+
+https://github.com/syedarhamali/e-commerce-17.git
+
+This repository belongs to my teacher and should be treated as the reference implementation.
+
+My goal is to make my backend follow the same architecture, coding patterns, API structure, folder organization, database integration approach, and best practices used in the teacher's repository.
+
+My backend repository:
 https://github.com/Attaint54/back-end-olx.git
 
-Frontend Repository:
-https://github.com/Attaint54/olx-cloi.git
+Tasks:
 
-My GitHub username is Attaint54.
+1. Thoroughly analyze the teacher's repository.
+2. Identify:
+   - Project structure
+   - Folder organization
+   - Route structure
+   - Controller patterns
+   - Model patterns
+   - Middleware usage
+   - MongoDB/Mongoose integration
+   - Authentication implementation
+   - Error handling approach
+   - Environment variable setup
+   - API design conventions
 
-Your task is to fully integrate MongoDB Atlas into the project and replace any mock, temporary, or in-memory data storage with MongoDB.
+3. Compare my backend repository against the teacher's repository.
 
-Requirements:
+4. Modify my backend to follow the teacher's standards while preserving my OLX project functionality.
 
-1. First analyze the entire backend codebase and understand its structure before making changes.
-
-2. Install and configure:
-   - mongoose
-   - dotenv
-   - bcryptjs (if authentication exists)
-   - any other necessary dependencies
-
-3. Create a production-ready MongoDB connection setup:
-   - config/db.js
-   - environment variable support
-   - proper connection error handling
-   - server should only start after successful MongoDB connection
-
-4. Create clean architecture:
-   - config/
-   - models/
-   - controllers/
-   - routes/
-   - middleware/
-   - utils/
-
-5. Create or update MongoDB models:
-   - User
-   - Listing/Product
-   - Category (if applicable)
-   - Any additional models required by the project
-
-6. Implement complete CRUD operations:
-   - Create listing
-   - Get all listings
-   - Get listing by ID
-   - Update listing
-   - Delete listing
-
-7. Add:
+5. Implement any missing components that exist in the teacher's project, including:
+   - MongoDB Atlas integration
+   - Mongoose schemas
+   - Controllers
+   - Routes
+   - Middleware
    - Validation
-   - Proper HTTP status codes
-   - Error handling middleware
-   - Async/await patterns
-   - Clean controller logic
+   - Authentication
+   - Error handling
+   - Environment configuration
 
-8. Authentication:
-   - Store users in MongoDB
-   - Hash passwords using bcryptjs
-   - Never store plain text passwords
-   - Update existing auth logic if needed
+6. Refactor code where necessary so the architecture resembles the teacher's implementation.
 
-9. Environment Variables:
-   Create:
-   - .env.example
+7. Keep all existing OLX features working.
 
-   Required variables:
-   PORT=
-   MONGODB_URI=
-   JWT_SECRET=
+8. Create any missing files and folders required.
 
-10. Update all existing routes and controllers to use MongoDB Atlas.
+9. Explain every change before making it.
 
-11. Keep existing functionality working:
-   - Login
-   - Signup
-   - Listings
-   - User profiles
-   - Search
-   - Any existing OLX features
+10. Generate complete production-ready code, not pseudocode.
 
-12. Frontend Integration:
-   - Verify all API endpoints used by the frontend
-   - Ensure frontend requests continue working
-   - Fix endpoint mismatches if found
+11. Use modern Express.js and Mongoose best practices.
 
-13. Code Quality:
-   - Follow Express best practices
-   - Remove dead code
-   - Add comments where necessary
-   - Avoid code duplication
+12. Create:
+    - config/db.js
+    - models/
+    - controllers/
+    - routes/
+    - middleware/
+    - .env.example
 
-14. At completion provide:
-   - List of files created
-   - List of files modified
-   - MongoDB Atlas setup instructions
-   - Commands required to run the project
-   - Testing steps
+13. Ensure MongoDB Atlas is fully connected through:
+    MONGODB_URI=<atlas_connection_string>
 
-15. Do NOT give placeholders or pseudo-code.
-   Generate complete working code for every modified file.
+14. After completion provide:
+    - Files created
+    - Files modified
+    - Reason for each change
+    - Commands to run the project
+    - Testing instructions
 
-16. Do NOT break existing functionality.
-
-17. If a feature is missing from the repositories but required for MongoDB integration, implement it properly.
-
-MongoDB Atlas connection string will be provided through:
-
-MONGODB_URI=<atlas_connection_string>
-
-Work directly on the repository code and make all required changes for a fully functional MongoDB-powered OLX application.
+Important:
+Do not copy code blindly from the teacher's repository. Instead, understand the architecture and adapt my backend to follow the same design principles while keeping my OLX business logic intact.

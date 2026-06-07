@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { uploadToCloudinary } = require("../config/cloudinary");
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -9,17 +10,23 @@ const generateToken = (user) => {
   );
 };
 
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
     if (!email || !password || !username) {
-      return res.status(400).json({ error: "Username, email, and password are required." });
+      return res.status(400).json({ message: "Username, email, and password are required." });
     }
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(409).json({ error: "User already exists." });
+      return res.status(409).json({ message: "User already exists." });
     }
-    const profilePicture = req.file ? req.file.path : null;
+
+    let profilePicture = null;
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, "olx-profiles");
+      profilePicture = result.secure_url;
+    }
+
     const user = await User.create({ name, username, email, password, profilePicture });
     const token = generateToken(user);
     res.status(201).json({
@@ -28,23 +35,30 @@ exports.register = async (req, res, next) => {
       token,
     });
   } catch (error) {
-    next(error);
+    console.error("REGISTER ERROR:", error.message);
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "User already exists." });
+    }
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: Object.values(error.errors).map((e) => e.message).join(", ") });
+    }
+    res.status(500).json({ message: error.message });
   }
 };
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required." });
+      return res.status(400).json({ message: "Username and password are required." });
     }
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ error: "Invalid username or password." });
+      return res.status(401).json({ message: "Invalid username or password." });
     }
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid username or password." });
+      return res.status(401).json({ message: "Invalid username or password." });
     }
     const token = generateToken(user);
     res.json({
@@ -52,18 +66,20 @@ exports.login = async (req, res, next) => {
       user: { id: user._id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture },
     });
   } catch (error) {
-    next(error);
+    console.error("LOGIN ERROR:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
-exports.getMe = async (req, res, next) => {
+exports.getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).json({ message: "User not found." });
     }
     res.json({ user: { id: user._id, name: user.name, username: user.username, email: user.email, profilePicture: user.profilePicture } });
   } catch (error) {
-    next(error);
+    console.error("GETME ERROR:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };

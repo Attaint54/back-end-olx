@@ -1,1 +1,10 @@
-JvwYnTuBVxzFZ0kC
+PORT=3000
+MONGODB_URI=mongodb+srv://attaulbari080_db_user:zCOeys5Pqynokz43@cluster0.7jx8wam.mongodb.net/olx-clone?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=olx-124421111222avcd
+CLOUDINARY_CLOUD_NAME=dqwyvzlnx
+CLOUDINARY_API_KEY=	727617657931296
+CLOUDINARY_API_SECRET=SwfdTgF2_gnOpziWXgABDpOl2oQ
+
+
+
+dosent matter old code
