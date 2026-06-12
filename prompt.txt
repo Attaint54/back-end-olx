@@ -1,3 +1,51 @@
+I have a MERN OLX project.
+
+Backend Repository:
+https://github.com/Attaint54/back-end-olx.git
+
+Frontend Repository:
+https://github.com/Attaint54/olx-cloi.git
+
+Production Backend URL:
 https://back-end-olx.vercel.app/
 
-this is my back end this is where data should come from
+Current Issues:
+
+1. Registration/Signup fails with "Network Error".
+2. Products saved in MongoDB Atlas do not appear on the frontend.
+
+Tasks:
+
+1. Analyze both repositories completely.
+2. Ensure the frontend uses only:
+   https://back-end-olx.vercel.app/
+   for all API requests.
+3. Remove any references to:
+
+   * localhost
+   * old backend URLs
+   * outdated environment variables.
+4. Trace and fix the complete signup flow:
+   Frontend → Axios → Backend → MongoDB Atlas.
+5. Trace and fix the complete product flow:
+   Frontend → GET Products API → MongoDB Atlas → Frontend Rendering.
+6. Update CORS configuration so requests from the deployed frontend are allowed.
+7. Replace hardcoded CLIENT_URL logic with a production-ready solution supporting both local and deployed environments.
+8. Verify MongoDB Atlas connection and ensure the correct database and collections are used.
+9. Check all routes, controllers, models, queries, and response structures.
+10. Fix any route mismatches or frontend response mapping issues.
+11. Add temporary debugging logs where useful.
+12. Generate complete working code for every modified file.
+13. Preserve all existing OLX functionality.
+14. Explain:
+
+    * Root cause of signup Network Error.
+    * Root cause of products not appearing.
+15. Provide:
+
+    * Files modified
+    * Files created
+    * Testing steps
+    * Logs to remove after debugging.
+
+Do not provide generic advice or pseudocode. Analyze the actual codebases and implement production-ready fixes.

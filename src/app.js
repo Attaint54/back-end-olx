@@ -9,9 +9,13 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((s) => s.trim())
+  : "*";
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*",
+    origin: allowedOrigins,
   })
 );
 app.use(express.json());
