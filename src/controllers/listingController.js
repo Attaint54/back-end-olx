@@ -32,8 +32,7 @@ exports.createListing = async (req, res) => {
 exports.getListings = async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
-    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
-    const skip = (page - 1) * limit;
+    const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
 
     const [listings, total] = await Promise.all([
       Listing.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
@@ -45,7 +44,6 @@ exports.getListings = async (req, res) => {
       total,
       skip,
       limit,
-      page,
     });
   } catch (error) {
     console.error("GET LISTINGS ERROR:", error.message);
@@ -81,8 +79,7 @@ exports.getListingsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
     const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
-    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
-    const skip = (page - 1) * limit;
+    const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
 
     const filter = { category: { $regex: `^${category}$`, $options: "i" } };
     const [listings, total] = await Promise.all([
@@ -95,7 +92,6 @@ exports.getListingsByCategory = async (req, res) => {
       total,
       skip,
       limit,
-      page,
     });
   } catch (error) {
     console.error("CATEGORY ERROR:", error.message);

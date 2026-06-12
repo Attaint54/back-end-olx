@@ -50,7 +50,7 @@ listingSchema.methods.toJSON = function () {
     brand: obj.brand,
     category: obj.category,
     thumbnail: obj.thumbnail,
-    images: obj.images.length ? obj.images : [obj.thumbnail],
+    images: [obj.thumbnail, ...obj.images].filter(Boolean),
     location: obj.location,
     sellerName: obj.sellerName,
     sellerPhone: obj.sellerPhone,
