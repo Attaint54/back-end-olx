@@ -7,8 +7,14 @@ let isConnected = false;
 
 module.exports = async (req, res) => {
   if (!isConnected) {
-    await connectDB();
-    isConnected = true;
+    try {
+      await connectDB();
+      isConnected = true;
+      console.log("MongoDB connected successfully");
+    } catch (error) {
+      console.error("MongoDB connection error in serverless:", error.message);
+      isConnected = false;
+    }
   }
   return app(req, res);
 };

@@ -31,6 +31,8 @@ exports.createListing = async (req, res) => {
 
 exports.getListings = async (req, res) => {
   try {
+    console.log("GET LISTINGS - query params:", { limit: req.query.limit, skip: req.query.skip });
+
     const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
     const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
 
@@ -38,6 +40,8 @@ exports.getListings = async (req, res) => {
       Listing.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
       Listing.countDocuments(),
     ]);
+
+    console.log("GET LISTINGS - found:", total, "returning:", listings.length);
 
     res.json({
       products: listings.map((l) => l.toJSON()),
@@ -54,6 +58,8 @@ exports.getListings = async (req, res) => {
 exports.searchListings = async (req, res) => {
   try {
     const query = (req.query.q || "").trim();
+    console.log("SEARCH LISTINGS - query:", query);
+
     if (!query) {
       return res.json({ products: [], total: 0, skip: 0, limit: 20 });
     }
@@ -78,6 +84,8 @@ exports.searchListings = async (req, res) => {
 exports.getListingsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
+    console.log("GET LISTINGS BY CATEGORY:", category);
+
     const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
     const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
 
@@ -101,6 +109,8 @@ exports.getListingsByCategory = async (req, res) => {
 
 exports.getListingById = async (req, res) => {
   try {
+    console.log("GET LISTING BY ID:", req.params.id);
+
     const listing = await Listing.findOne({ listingId: Number(req.params.id) });
     if (!listing) {
       return res.status(404).json({ message: "Listing not found." });

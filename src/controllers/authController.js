@@ -13,6 +13,8 @@ const generateToken = (user) => {
 exports.register = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
+    console.log("REGISTER ATTEMPT:", { name, username, email, hasPassword: !!password, hasFile: !!req.file });
+
     if (!email || !password || !username) {
       return res.status(400).json({ message: "Username, email, and password are required." });
     }
@@ -49,6 +51,8 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log("LOGIN ATTEMPT:", { username, hasPassword: !!password });
+
     if (!username || !password) {
       return res.status(400).json({ message: "Username and password are required." });
     }
